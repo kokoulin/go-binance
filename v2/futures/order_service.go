@@ -842,8 +842,7 @@ func (s *CreateBatchOrdersService) Do(ctx context.Context, opts ...RequestOption
 
 	batchCreateOrdersResponse := new(CreateBatchOrdersResponse)
 
-	for _, j := range rawMessages {
-		errJ := j
+	for i, j := range rawMessages {
 		o := new(Order)
 		if err := json.Unmarshal(*j, o); err != nil {
 			return &CreateBatchOrdersResponse{}, err
@@ -854,6 +853,7 @@ func (s *CreateBatchOrdersService) Do(ctx context.Context, opts ...RequestOption
 		} else {
 			o := new(Order)
 			e := new(OrderError)
+			errJ := rawMessages[i]
 			if err := json.Unmarshal(*errJ, e); err != nil {
 				return &CreateBatchOrdersResponse{}, err
 			}
