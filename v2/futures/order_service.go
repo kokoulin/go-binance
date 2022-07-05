@@ -851,18 +851,24 @@ func (s *CreateBatchOrdersService) Do(ctx context.Context, opts ...RequestOption
 
 		if o.ClientOrderID != "" {
 			batchCreateOrdersResponse.Orders = append(batchCreateOrdersResponse.Orders, o)
-		} else {
-			o := new(Order)
-			e := new(OrderError)
-			errJ := clearMessages[i]
-			if err := json.Unmarshal(*errJ, e); err != nil {
-				return &CreateBatchOrdersResponse{}, err
-			}
-			o.OrderError = *e
-			batchCreateOrdersResponse.ErrorOrders = append(batchCreateOrdersResponse.ErrorOrders, o)
+			clearMessages = remove(clearMessages, i)
 		}
+	}
+
+	for _, j := range clearMessages {
+		o := new(Order)
+		e := new(OrderError)
+		if err := json.Unmarshal(*j, e); err != nil {
+			return &CreateBatchOrdersResponse{}, err
+		}
+		o.OrderError = *e
+		batchCreateOrdersResponse.ErrorOrders = append(batchCreateOrdersResponse.ErrorOrders, o)
 	}
 
 	return batchCreateOrdersResponse, nil
 
+}
+
+func remove(slice []*json.RawMessage, s int) []*json.RawMessage {
+	return append(slice[:s], slice[s+1:]...)
 }
