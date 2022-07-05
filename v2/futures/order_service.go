@@ -833,8 +833,9 @@ func (s *CreateBatchOrdersService) Do(ctx context.Context, opts ...RequestOption
 	}
 
 	rawMessages := make([]*json.RawMessage, 0)
-
+	clearMessages := make([]*json.RawMessage, 0)
 	err = json.Unmarshal(data, &rawMessages)
+	err = json.Unmarshal(data, &clearMessages)
 
 	if err != nil {
 		return &CreateBatchOrdersResponse{}, err
@@ -853,7 +854,7 @@ func (s *CreateBatchOrdersService) Do(ctx context.Context, opts ...RequestOption
 		} else {
 			o := new(Order)
 			e := new(OrderError)
-			errJ := rawMessages[i]
+			errJ := clearMessages[i]
 			if err := json.Unmarshal(*errJ, e); err != nil {
 				return &CreateBatchOrdersResponse{}, err
 			}
