@@ -851,6 +851,12 @@ func (s *CreateBatchOrdersService) Do(ctx context.Context, opts ...RequestOption
 		if o.ClientOrderID != "" {
 			batchCreateOrdersResponse.Orders = append(batchCreateOrdersResponse.Orders, o)
 		} else {
+			o := new(Order)
+			e := new(OrderError)
+			if err := json.Unmarshal(*j, e); err != nil {
+				return &CreateBatchOrdersResponse{}, err
+			}
+			o.OrderError = *e
 			batchCreateOrdersResponse.ErrorOrders = append(batchCreateOrdersResponse.ErrorOrders, o)
 		}
 	}
