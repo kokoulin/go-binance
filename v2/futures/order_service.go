@@ -341,7 +341,7 @@ type Order struct {
 
 type OrderError struct {
 	Msg  string `json:"msg"`
-	Code string `json:"code"`
+	Code int64  `json:"code"`
 }
 
 // ListOrdersService all account orders; active, canceled, or filled
