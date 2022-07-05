@@ -336,6 +336,12 @@ type Order struct {
 	PositionSide     PositionSideType `json:"positionSide"`
 	PriceProtect     bool             `json:"priceProtect"`
 	ClosePosition    bool             `json:"closePosition"`
+	OrderError       OrderError       `json:"orderError"`
+}
+
+type OrderError struct {
+	Msg  string `json:"msg"`
+	Code string `json:"code"`
 }
 
 // ListOrdersService all account orders; active, canceled, or filled
